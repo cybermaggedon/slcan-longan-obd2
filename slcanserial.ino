@@ -1,11 +1,11 @@
-#include <mcp2515_defs.h>
-#include <mcp2515.h>
-#include <defaults.h>
-#include <global.h>
-#include <Canbus.h>
+#include "mcp2515_defs.h"
+#include "mcp2515.h"
+#include "defaults.h"
+#include "global.h"
+#include "Canbus.h"
 
-#define LED_OPEN 7
-#define LED_ERR 8
+#define LED_OPEN 3
+//#define LED_ERR 8
 #define CMD_LEN (sizeof("T12345678811223344556677881234\r")+1)
 
 int g_can_speed = CANSPEED_500; // default: 500k
@@ -14,12 +14,12 @@ int g_ts_en = 0;
 // the setup function runs once when you press reset or power the board
 void setup() {
   pinMode(LED_OPEN, OUTPUT);
-  pinMode(LED_ERR, OUTPUT);
+//  pinMode(LED_ERR, OUTPUT);
   Serial.begin(1000000); // select from 115200,500000,1000000,2000000
   if (Canbus.init(g_can_speed)) {
-    digitalWrite(LED_ERR, LOW);
+ //   digitalWrite(LED_ERR, LOW);
   } else {
-    digitalWrite(LED_ERR, HIGH);
+ //   digitalWrite(LED_ERR, HIGH);
   }
 }
 
@@ -199,15 +199,15 @@ void pars_slcancmd(char *buf)
     case 'O': // open channel
       digitalWrite(LED_OPEN, HIGH);
       if (Canbus.init(g_can_speed)) {
-        digitalWrite(LED_ERR, LOW);
+ //       digitalWrite(LED_ERR, LOW);
       } else {
-        digitalWrite(LED_ERR, HIGH);
+  //      digitalWrite(LED_ERR, HIGH);
       }
       slcan_ack();
       break;
     case 'C': // close channel
       digitalWrite(LED_OPEN, LOW);
-      digitalWrite(LED_ERR, LOW);
+ //     digitalWrite(LED_ERR, LOW);
       slcan_ack();
       break;
     case 't': // SFF

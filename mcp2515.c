@@ -174,7 +174,7 @@ uint8_t mcp2515_init(uint8_t speed)
 	
 	// test if we could read back the value => is the chip accessible?
 	if (mcp2515_read_register(CNF1) != speed) {
-		SET(LED2_HIGH);
+//		SET(LED2_HIGH);
 
 		return false;
 	}
