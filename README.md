@@ -38,6 +38,11 @@ the Arduino IDE: https://docs.longan-labs.cc/1030001/
 
 # Using
 
+Once programmed, the module provides slcan protocol over the serial header.
+You need to connect this with Linux somehow, easiest way is to leave the
+FTDI appliance connected, and communicate with that.  It probably shows up
+as /dev/ttyUSB1.
+
 Burn your Arduino with this and install can-utils for your linux
 environment in advance.
 
