@@ -1,30 +1,52 @@
 
 # slcanserial
 
-This is an Arduino sketch which makes a Longan Labs CAN Serial device into
+## Summary
+
+This is an Arduino sketch which makes a Longan Labs Serial CAN device into
 a CAN-USB adapter for Linux SocketCAN(can-utils).
 
-This is totally forked from slcanuino.
+The motivation for this is that SocketCAN/slcan provide a very usable way to
+interact with devices that support the right API, whereas the firmware
+supplied with this device is very limited.
 
-# Supported hardware
+You need an FTDI-type programmer to be able to program this device, and then
+a way to get the device to interface with a Linux system.  Options are:
+- The FTDI-type programmer makes the Serial CAN device look like it is
+  on a serial port, so you can just use that.
+- If you have a Linux device with TTL ports (e.g. BeagleBoard, Raspberry Pi)
+  you should be able to just hook the device up to those ports, although
+  I haven't tried this.
 
-https://docs.longan-labs.cc/1030001/
-https://docs.longan-labs.cc/1030002/
+This is totally forked from github.com/kahiroka/slcanuino.
+
+## Supported hardware
+
+The same basic board is available in two packages:
+- https://docs.longan-labs.cc/1030001/
+- https://docs.longan-labs.cc/1030002/
 
 The Longan Serial CAN Bus Module is the target, specifically the v1.2 board.
-This is a nice device, it has a programmable ATmega168P device.  It's small,
-the CAN bus H/L ports are a 2-wire header, so you can wire it straight into
-the bus if you can find a good place.  It sells for around $15 at the moment.
+I haven't tried v1.0 or v1.1, and it looks like they don't have programming
+ports.
 
-The pre-loaded firmware is a little disappointing, limits the onward
-serial output to 115.2k, and has a protocol which is awkward to work with.
-The bizarre thing is, this is an Arduino compatible device, so
-slcanuino is a perfect firmware.  It can push data over the serial at
-1000000 and integrates with SocketCAN.
+This is a nice device, it has a programmable ATmega168P device.  It's very
+small, which is useful if you want to hide it away in a place where a CAN
+Shield or OBD-II port would be too big.  The device has a 2-wire header, so
+you can use an OBD-II interface, or just tap straight into CAN twisted pair.
+It sells for around $15 at the moment.
 
-This firmware is a minor port from slcanuino, to change the ports and LEDs.
+The pre-loaded firmware is a little disappointing, limits the onward serial
+output to 115.2k, and has a protocol which is awkward to work with.  The AT
+commands must be submitted in 10 milliseconds, so you can't play with the
+device over minicom (unless you can type VERY fast).
+The bizarre thing is, this is an Arduino compatible device, so slcanuino is
+a perfect firmware.  It can push data over the serial at 1000000 and
+integrates with SocketCAN.
 
-# Replacing the firmware
+This repo is a fork of slcanuino, to change the ports and LEDs.
+
+## Replacing the firmware
 
 You need an FTDI-type programmer.  You can use the hex binary I provide...
 
@@ -36,7 +58,7 @@ You need an FTDI-type programmer.  You can use the hex binary I provide...
 Alternatively, following the instructions here if you want to flash from
 the Arduino IDE: https://docs.longan-labs.cc/1030001/
 
-# Using
+## Using
 
 Once programmed, the module provides slcan protocol over the serial header.
 You need to connect this with Linux somehow, easiest way is to leave the
@@ -46,7 +68,8 @@ as /dev/ttyUSB1.
 Burn your Arduino with this and install can-utils for your linux
 environment in advance.
 
-## Deps
+### Deps
+
 1. slcan (kernel module)
 2. SocketCAN (http://www.pengutronix.de/software/libsocketcan/)
 3. can-utils (https://github.com/linux-can/can-utils)
@@ -55,7 +78,7 @@ or just install can-utils package.
 
     $ sudo apt install can-utils
 
-## Setup
+### Setup
 
     $ sudo slcan_attach -f -s6 -o /dev/ttyUSB0  
     $ sudo slcand -S 1000000 ttyUSB0 can0  
@@ -65,7 +88,7 @@ then,
 
     $ candump can0
 
-## Cleanup
+### Cleanup
 
     $ sudo ifconfig can0 down  
     $ sudo killall slcand  
