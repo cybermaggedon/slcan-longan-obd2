@@ -10,13 +10,16 @@ The motivation for this is that SocketCAN/slcan provide a very usable way to
 interact with devices that support the right API, whereas the firmware
 supplied with this device is very limited.
 
-You need an FTDI-type programmer to be able to program this device, and then
-a way to get the device to interface with a Linux system.  Options are:
-- The FTDI-type programmer makes the Serial CAN device look like it is
+You need an FTDI-type programmer to be able to program this device.  Once
+programmed, you need a way to get the device to interface with a Linux system
+e.g.
+- The FTDI-type you used to program the device makes it like it is
   on a serial port, so you can just use that.
-- If you have a Linux device with TTL ports (e.g. BeagleBoard, Raspberry Pi)
+- If you have a Linux device with 5V TTL GPIO (e.g. BeagleBoard)
   you should be able to just hook the device up to those ports, although
   I haven't tried this.
+- You can use 5V/3.3V matching circuitry to match the 5V device to
+  Raspberry Pi's 3.3V GPIO and then connect to a Pi.  I haven't tried this.
 
 This is totally forked from github.com/kahiroka/slcanuino.
 
@@ -48,14 +51,28 @@ This repo is a fork of slcanuino, to change the ports and LEDs.
 
 ## Replacing the firmware
 
-You need an FTDI-type programmer.  You can use the hex binary I provide...
+### Connecting to programmer
+
+You need an FTDI-type programmer
+e.g. https://www.amazon.co.uk/gp/product/B07R17BMTL/ .
+Make sure you have one with the DTR line,
+so you connect VCC, TX, RX, GND, DTR lines between FTDI programmer and the
+Serial CAN device.  TX connects to TX and RX to RX, these connections don't
+get crossed as you might do with other serial interconnects.
+
+### Flashing the firmware
+
+You can use the hex binary I provide...
 
 ```
   avrdude -b 19200 -D -p atmega168 -c arduino -P /dev/ttyUSB0 \
     -U flash:w:slcanserial.arduino.hex
 ```
 
-Alternatively, following the instructions here if you want to flash from
+### Arduino IDE
+
+Alternatively, load this code into the Arduino IDE and follow the
+instructions here if you want to flash from
 the Arduino IDE: https://docs.longan-labs.cc/1030001/
 
 ## Using
