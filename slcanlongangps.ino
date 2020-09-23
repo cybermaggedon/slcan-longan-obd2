@@ -4,7 +4,7 @@
 #include "global.h"
 #include "Canbus.h"
 
-#define LED_OPEN 3
+#define LED_OPEN 13
 //#define LED_ERR 8
 #define CMD_LEN (sizeof("T12345678811223344556677881234\r")+1)
 
